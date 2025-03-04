@@ -1,0 +1,75 @@
+@startuml
+'left to right direction
+allow_mixing
+skinparam actorStyle awesome
+
+actor "Web Client" as WebClient
+actor "App Client" as AppClient
+database "DRABT SQL Database" as SQLDatabase
+
+package "DRABT Restful Server" as DRABTRestfulServer {
+    class DRABTServer {
+        +Flask server
+        +Api api
+        +__init__()
+    }
+
+    class GenerateGuestUUID {
+        +get(): json
+    }
+
+    package "DRABT Database" as DRABTDatabase {
+        class DRABTDatabase {
+            +CreateConnection(): mysql.connector.connection
+        }
+
+        class GetCard {
+            +get(): json
+        }
+        
+        class GetDeck {
+            +get(): json
+        }
+        
+        class GetFlashcard {
+            +get(): json
+        }
+        
+        class ValidateUser {
+            +login(): json
+        }
+        
+        class RegisterUser {
+            +Register(): json
+        }
+        
+        class SubmitCard {
+            +post(): json
+        }
+        
+        class SubmitDeck {
+            +post(): json
+        }
+        
+        class SubmitFlashcard {
+            +post(): json
+        }
+    }
+
+    DRABTServer ---> GenerateGuestUUID
+    DRABTDatabase --> GetCard
+    DRABTDatabase --> GetDeck
+    DRABTDatabase --> GetFlashcard
+    DRABTDatabase --> ValidateUser
+    DRABTDatabase --> RegisterUser
+    DRABTDatabase --> SubmitCard
+    DRABTDatabase --> SubmitDeck
+    DRABTDatabase --> SubmitFlashcard
+    DRABTServer --> DRABTDatabase
+}
+
+WebClient -- DRABTServer : interacts with
+AppClient -- DRABTServer : interacts with
+DRABTDatabase --- SQLDatabase : stores data
+
+@enduml
