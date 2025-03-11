@@ -22,21 +22,21 @@ class GetCard(Resource):
         connection = CreateConnection()
         cursor = connection.cursor(dictionary = True)
         result = ""
-        word = ""
+        card = ""
 
         if (__verbose__):
-            print("Feting word from dictionary...")
+            print("Feting card from database...")
 
-        cursor.execute("SELECT word FROM valid_words ORDER BY RAND() LIMIT 1")
+        cursor.execute("SELECT card FROM cards ORDER BY RAND() LIMIT 1")
         result = cursor.fetchone()
-        word = result['word'].upper()
+        card = result['card']
         cursor.close()
         connection.close()
 
         if (__verbose__):
-            print("Returning secret word:", word)
+            print("Returning card:", card)
 
-        return jsonify(word=word)
+        return jsonify(card=card)
 
 class GetDeck(Resource):        
     # Fetch card data from database
@@ -51,27 +51,28 @@ class GetFlashcard(Resource):
 class ValidateUser():
     # Validate user login credentials.
     def login(self):
-        word = str(request.args.get("word"))
+        name = str(request.args.get("name"))
+        password = str(request.args.get("password"))
         connection = CreateConnection()
         cursor = connection.cursor(dictionary = True)
         result = ""
 
         if (__verbose__):
-            print("Validating word from dictionary: ", word)
+            print("Validating user credentials: ", name)
 
-        cursor.execute("SELECT COUNT(*) as count FROM valid_words WHERE word = %s", (word,))
+        cursor.execute("SELECT COUNT(*) as count FROM user WHERE name = %s", (name,))
         result = cursor.fetchone()
         cursor.close()
         connection.close()
 
         if result['count'] > 0:
             if (__verbose__):
-                print(word, " is valid!")
+                print(name, " is found!")
 
             return jsonify(valid = True)
         
         if (__verbose__):
-            print(word, " not found!")
+            print(name, " is missing!")
 
         return jsonify(valid = False)
 
@@ -83,25 +84,19 @@ class RegisterUser():
 class SubmitCard(Resource):
     # Add to or modify Card database.
     def post(self):
-        userID = str(request.args.get("userID"))
-        games = str(request.args.get("games"))
-        wins = str(request.args.get("wins"))
-        streak = str(request.args.get("streak"))
-        winner = str(request.args.get("wonGame"))
-        wonGame = 0
+        owner = str(request.args.get("owner"))
+        text = str(request.args.get("text"))
+        image = str(request.args.get("image"))
         connection = CreateConnection()
         cursor = connection.cursor(dictionary=True)
-        
-        if (winner):
-            wonGame = 1
 
         if (__verbose__):
-            print(f"Submitting stats for user {userID}: wins={wins}, games={games}, streak={streak}, winner={wonGame}")
+            print(f"Submitting card ownder={owner}: text={text}, image={image}")
 
-        # Insert or update the user_stats table
-        cursor.execute("INSERT INTO stats (userID, wins, games, streak, wonGame) VALUES (%s, %s, %s, %s, %s)"
-                       "ON DUPLICATE KEY UPDATE wins = %s, games = %s, streak = %s, wonGame = %s",
-                       (userID, wins, games, streak, wonGame, wins, games, streak, wonGame))
+        # Insert or update the cards table
+        cursor.execute("INSERT INTO stats (owner, text, image) VALUES (%s, %s, %s)"
+                       "ON DUPLICATE KEY UPDATE owner = %s, text = %s, image = %s",
+                       (owner, text, image))
         
         connection.commit()
         cursor.close()

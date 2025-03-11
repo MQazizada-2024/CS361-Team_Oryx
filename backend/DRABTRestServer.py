@@ -19,9 +19,9 @@ class DRABTServer:
         self.api.add_resource(DRABTDatabase.GetCard, '/api/GetCard')
         self.api.add_resource(DRABTDatabase.GetDeck, '/api/GetDeck')
         self.api.add_resource(DRABTDatabase.GetFlashcard, '/api/GetFlashcard')
-        self.api.add_resource(DRABTDatabase.SubmitCard, '/api/SubmitStats')
-        self.api.add_resource(DRABTDatabase.SubmitFlashcard, '/api/SubmitStats')
-        self.api.add_resource(DRABTDatabase.SubmitDeck, '/api/SubmitStats')
+        self.api.add_resource(DRABTDatabase.SubmitCard, '/api/SubmitCard')
+        self.api.add_resource(DRABTDatabase.SubmitFlashcard, '/api/SubmitFlashCard')
+        self.api.add_resource(DRABTDatabase.SubmitDeck, '/api/SubmitDeck')
         self.server.run(host='0.0.0.0', debug=True)
     
     class GenerateGuestUUID(Resource):
