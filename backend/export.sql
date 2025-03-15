@@ -6,9 +6,9 @@ USE `oryx_drabt`;
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT UNIQUE,
-  `name` varchar(36) NOT NULL UNIQUE,
-  `password` varchar(36) NOT NULL,
-  `email` varchar(5) NOT NULL UNIQUE,
+  `name` varchar(50) NOT NULL UNIQUE,
+  `password` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL UNIQUE,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `email` (`email`)
@@ -40,6 +40,7 @@ DROP TABLE IF EXISTS `decks`;
 CREATE TABLE `decks` (
   `id` int NOT NULL AUTO_INCREMENT UNIQUE,
   `owner` int NOT NULL,
+  `name` varchar(50),
   PRIMARY KEY (`id`),
   FOREIGN KEY `owner` REFERENCES users(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5758 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

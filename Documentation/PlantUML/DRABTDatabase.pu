@@ -1,0 +1,45 @@
+@startuml
+
+' Define entities and their attributes
+object users {
+  id : int
+  name : varchar(50)
+  password : varchar(50)
+  email : varchar(50)
+}
+
+object cards {
+  id : int
+  owner : int
+  text : varchar(50)
+  image : VARBINARY
+}
+
+object flashcards {
+  id : int
+  owner : int
+  front : int
+  back : int
+}
+
+object decks {
+  id : int
+  owner : int
+  name : varchar(50)
+}
+
+object deck_flashcards {
+  deck_id : int
+  flashcard_id : int
+}
+
+' Define relationships (foreign keys)
+users <-- cards : "owner"
+users <-- flashcards : "owner"
+cards <-- flashcards : "front"
+cards <-- flashcards : "back"
+users <-- decks : "owner"
+decks o-- deck_flashcards : "references"
+flashcards o-- deck_flashcards : "references"
+
+@enduml
